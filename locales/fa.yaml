@@ -1,0 +1,14 @@
+welcome: >
+  سلام ${from.first_name}!
+
+  ترجمه کردن این ربات خیلی راحته
+help: این یک متن کمکی نمونه‌ست
+menu:
+  back: بازگشت
+  main: اصلی
+  settings: تنظیمات
+  language: زبان
+settings:
+  body: >
+    یوهو
+  language: زبان بات را انتخاب کنید

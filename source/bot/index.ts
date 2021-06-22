@@ -1,18 +1,16 @@
-import { existsSync, readFileSync } from 'fs';
 import { generateUpdateMiddleware } from 'telegraf-middleware-console-time';
 import { I18n as TelegrafI18n } from '@edjopato/telegraf-i18n';
 import { MenuMiddleware } from 'telegraf-inline-menu';
 import { Telegraf } from 'telegraf';
 import TelegrafSessionLocal from 'telegraf-session-local';
-import { fightDragons, danceWithFairies } from '../magic/index.js';
+import cron from "node-cron";
+import axios, { AxiosRequestConfig } from "axios";
 import { MyContext } from './my-context.js';
 import { menu } from './menu/index.js';
 
-const token = (existsSync('/run/secrets/bot-token.txt') && readFileSync('/run/secrets/bot-token.txt', 'utf8').trim()) ||
-	(existsSync('bot-token.txt') && readFileSync('bot-token.txt', 'utf8').trim()) ||
-	process.env['BOT_TOKEN'];
+const token = process.env['BOT_TOKEN'];
 if (!token) {
-	throw new Error('You have to provide the bot-token from @BotFather via file (bot-token.txt) or environment variable (BOT_TOKEN)');
+	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
 }
 
 const bot = new Telegraf<MyContext>(token);
@@ -37,43 +35,41 @@ if (process.env['NODE_ENV'] !== 'production') {
 	bot.use(generateUpdateMiddleware());
 }
 
-bot.command('help', async context => context.reply(context.i18n.t('help')));
-
-bot.command('magic', async context => {
-	const combatResult = fightDragons();
-	const fairyThoughts = danceWithFairies();
-
-	let text = '';
-	text += combatResult;
-	text += '\n\n';
-	text += fairyThoughts;
-
-	return context.reply(text);
-});
-
 const menuMiddleware = new MenuMiddleware('/', menu);
 bot.command(
 	'start',
 	async context => menuMiddleware.replyToContext(context)
 );
-bot.command(
-	'settings',
-	async context => menuMiddleware.replyToContext(context, '/settings/')
-);
+
 bot.use(menuMiddleware.middleware());
 
 bot.catch(error => {
 	console.error('telegraf error occured', error);
 });
 
+var getInnovationFactoryWeather: AxiosRequestConfig = {
+	method: 'get',
+	url: 'api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f',
+	headers: {}
+};
+
 export async function start(): Promise<void> {
-	// The commands you set here will be shown as /commands like /start or /magic in your telegram client.
 	await bot.telegram.setMyCommands([
-		{ command: 'start', description: 'open the menu' },
-		{ command: 'magic', description: 'do magic' },
-		{ command: 'help', description: 'show the help' },
-		{ command: 'settings', description: 'open the settings' }
+		{ command: 'start', description: 'open the menu' }
 	]);
+
+	cron.schedule('* * * * *', () => {
+		axios(getInnovationFactoryWeather)
+			.then(function (response) {
+				console.log(JSON.stringify(response.data.main));
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+
+		// bot.telegram.sendMessage(1155817798, "scheduled message");
+		// bot.telegram.setChatTitle(-557983424, "new title");
+	});
 
 	await bot.launch();
 	console.log(new Date(), 'Bot started as', bot.botInfo?.username);

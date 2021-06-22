@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'fs';
 import { generateUpdateMiddleware } from 'telegraf-middleware-console-time';
 import { Telegraf } from 'telegraf';
 import TelegrafSessionLocal from 'telegraf-session-local';
@@ -13,7 +14,14 @@ const removeChatTitleEventMessage = async (ctx: any) => {
 
 }
 
-const token = process.env['BOT_TOKEN'];
+const token = (
+	existsSync('/run/secrets/bot-token.txt') &&
+	readFileSync('/run/secrets/bot-token.txt', 'utf8').trim()
+) || (
+	existsSync('bot-token.txt') &&
+	readFileSync('bot-token.txt', 'utf8').trim()
+) || process.env['BOT_TOKEN'];
+
 if (!token) {
 	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
 }

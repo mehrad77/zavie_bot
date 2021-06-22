@@ -3,8 +3,16 @@ import { I18n as TelegrafI18n } from '@edjopato/telegraf-i18n';
 import { Telegraf } from 'telegraf';
 import TelegrafSessionLocal from 'telegraf-session-local';
 import cron from "node-cron";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { MyContext } from './my-context.js';
+import { OpenWeatherMapResponseType } from '../@types/index.js';
+
+const groupID = -1001352113717;
+
+const removeChatTitleEventMessage = async (ctx: any) => {
+	await ctx.deleteMessage()
+
+}
 
 const token = process.env['BOT_TOKEN'];
 if (!token) {
@@ -40,17 +48,20 @@ bot.catch(error => {
 export async function start(): Promise<void> {
 	cron.schedule('* * * * *', () => {
 		axios.get('https://api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f')
-			.then(function (response) {
-				console.log(JSON.stringify(response.data.main));
+			.then((response: AxiosResponse<OpenWeatherMapResponseType>) => {
+				const main = response.data.main;
+				bot.telegram.setChatTitle(
+					groupID,
+					`${main.feels_like.toFixed(0)}°C ☘️`
+				);
 			})
 			.catch(function (error) {
 				console.error(error);
 			});
-
-		// bot.telegram.sendMessage(1155817798, "scheduled message");
-		// bot.telegram.setChatTitle(-557983424, "new title");
 	});
 
+	bot.on('new_chat_title', removeChatTitleEventMessage);
+	
 	await bot.launch();
 	console.log(new Date(), 'Bot started as', bot.botInfo?.username);
 }

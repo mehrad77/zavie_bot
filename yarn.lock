@@ -224,17 +224,6 @@
   dependencies:
     arrify "^1.0.1"
 
-"@edjopato/telegraf-i18n@^0.2.0":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@edjopato/telegraf-i18n/-/telegraf-i18n-0.2.2.tgz#c891a590c22fe970d2f8bbecfcb42b8323094f89"
-  integrity sha512-F/3QLxJvKCCs09RJuBmi+xZPieF0HqUDZQqhN+efhGcpxLi7yXEAXzQ0XT6WR+3zVx8JZUB6kv/6GHNL214Q8g==
-  dependencies:
-    compile-template "^0.3.1"
-    debug "^4.0.1"
-    js-yaml "^4.0.0"
-    tableize-object "^0.1.0"
-    typegram "^3.2.3"
-
 "@eslint/eslintrc@^0.4.1", "@eslint/eslintrc@^0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.2.tgz#f63d0ef06f5c0c57d76c4ab5f63d3835c51b0179"
@@ -593,11 +582,6 @@ argparse@^1.0.7:
   integrity sha512-o5Roy6tNG4SL/FOkCAN6RzjiakZS25RLYFrcMttJqbdd8BWrnA+fGz57iN5Pb06pvBGvl5gQ0B48dJlslXvoTg==
   dependencies:
     sprintf-js "~1.0.2"
-
-argparse@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/argparse/-/argparse-2.0.1.tgz#246f50f3ca78a3240f6c997e8a9bd1eac49e4b38"
-  integrity sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==
 
 arr-diff@^4.0.0:
   version "4.0.0"
@@ -1152,11 +1136,6 @@ commondir@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
   integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
-
-compile-template@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/compile-template/-/compile-template-0.3.1.tgz#e581a08385c792609408d448187a5eaaf334b6b0"
-  integrity sha512-5aB55cRApvy8zKPe9RrrLVysVpHafgp1IMvfGYQ8QnXrIsafYuj73yyIGYEHsslYoDxIs/XsM5wTIxICcwIKog==
 
 component-emitter@^1.2.1:
   version "1.3.0"
@@ -2877,13 +2856,6 @@ js-yaml@^3.13.1, js-yaml@^3.14.0:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-js-yaml@^4.0.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
-  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
-  dependencies:
-    argparse "^2.0.1"
-
 jsesc@^2.5.1:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.2.tgz#80564d2e483dacf6e8ef209650a67df3f0c283a4"
@@ -4447,24 +4419,10 @@ table@^6.0.9:
     string-width "^4.2.0"
     strip-ansi "^6.0.0"
 
-tableize-object@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/tableize-object/-/tableize-object-0.1.0.tgz#7c29e0133b27d48b56b9e76d3a28d241df1b3a24"
-  integrity sha1-fCngEzsn1ItWuedtOijSQd8bOiQ=
-  dependencies:
-    isobject "^2.0.0"
-
 tapable@^0.1.8:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/tapable/-/tapable-0.1.10.tgz#29c35707c2b70e50d07482b5d202e8ed446dafd4"
   integrity sha1-KcNXB8K3DlDQdIK10gLo7URtr9Q=
-
-telegraf-inline-menu@^6.0.0:
-  version "6.2.1"
-  resolved "https://registry.yarnpkg.com/telegraf-inline-menu/-/telegraf-inline-menu-6.2.1.tgz#500af72ecc40b7919a8ad01a0929f2945587cd04"
-  integrity sha512-DMxt0xK7bB49JCifrl/eqPjrPfAl0Wpls7d3H/X+93pOCGO7MlguhG9V+9FVaZy2m2SvQ9WtqLZDc3DTWR0rXQ==
-  dependencies:
-    typegram "^3.0.2"
 
 telegraf-middleware-console-time@^2.0.0:
   version "2.0.0"
@@ -4661,7 +4619,7 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typegram@^3.0.2, typegram@^3.2.0, typegram@^3.2.3:
+typegram@^3.2.0:
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/typegram/-/typegram-3.3.1.tgz#af1ca857350a270ed065fb708c19bab36e0d61a7"
   integrity sha512-Y1bR17IZ9Shj1Ih8wTLtrmOOMHJ20ve0Bd5SPymmw53uO4WLp/JjNM55s2b6PEziBvMISRdCQSZ+m6JiUKEobA==

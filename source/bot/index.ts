@@ -1,5 +1,4 @@
 import { generateUpdateMiddleware } from 'telegraf-middleware-console-time';
-import { I18n as TelegrafI18n } from '@edjopato/telegraf-i18n';
 import { Telegraf } from 'telegraf';
 import TelegrafSessionLocal from 'telegraf-session-local';
 import cron from "node-cron";
@@ -26,15 +25,6 @@ const localSession = new TelegrafSessionLocal({
 });
 
 bot.use(localSession.middleware());
-
-const i18n = new TelegrafI18n({
-	directory: 'locales',
-	defaultLanguage: 'en',
-	defaultLanguageOnMissing: true,
-	useSession: true
-});
-
-bot.use(i18n.middleware());
 
 if (process.env['NODE_ENV'] !== 'production') {
 	// Show what telegram updates (messages, button clicks, ...) are happening (only in development)

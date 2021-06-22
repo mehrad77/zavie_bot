@@ -44,7 +44,7 @@ bot.catch(error => {
 });
 
 export async function start(): Promise<void> {
-	cron.schedule('* * * * *', () => {
+	cron.schedule('*/5 * * * *', () => {
 		axios.get('https://api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f')
 			.then((response: AxiosResponse<OpenWeatherMapResponseType>) => {
 				const main = response.data.main;

@@ -5,22 +5,22 @@ import TelegrafSessionLocal from 'telegraf-session-local';
 import cron from "node-cron";
 import axios, { AxiosResponse } from "axios";
 import { MyContext } from './my-context.js';
-import { OpenWeatherMapResponseType } from '../@types/index.js';
+import { emojis } from '../constants/index.js';
+import type { OpenWeatherMapResponseType } from '../@types/index.js';
 
 const groupID = -1001352113717;
 
 const removeChatTitleEventMessage = async (ctx: any) => {
 	await ctx.deleteMessage()
-
 }
 
 const token = (
 	existsSync('/run/secrets/bot-token.txt') &&
 	readFileSync('/run/secrets/bot-token.txt', 'utf8').trim()
 ) || (
-	existsSync('bot-token.txt') &&
-	readFileSync('bot-token.txt', 'utf8').trim()
-) || process.env['BOT_TOKEN'];
+		existsSync('bot-token.txt') &&
+		readFileSync('bot-token.txt', 'utf8').trim()
+	) || process.env['BOT_TOKEN'];
 
 if (!token) {
 	throw new Error('You have to provide the bot-token from @BotFather via environment variable (BOT_TOKEN)');
@@ -44,14 +44,32 @@ bot.catch(error => {
 });
 
 export async function start(): Promise<void> {
-	cron.schedule('*/5 * * * *', () => {
-		axios.get('https://api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f')
+	let lastWeather = '';
+	cron.schedule('* * * * *', () => {
+		axios.get(
+			'https://api.openweathermap.org/data/2.5/weather', {
+			params: {
+				appid: "06662bd043969e4b502822dbc443125f",
+				lat: "35.69963822421955",
+				lon: "51.32022402010034",
+				units: 'metric',
+				lang: 'fa',
+			}
+		})
 			.then((response: AxiosResponse<OpenWeatherMapResponseType>) => {
 				const main = response.data.main;
+				const weather = response.data.weather[0];
 				bot.telegram.setChatTitle(
 					groupID,
-					`${main.feels_like.toFixed(0)}°C ☘️`
-				);
+					`${main.feels_like.toFixed(0)}°C ${emojis[weather?.icon || 'default']}`
+					);
+					
+				if(weather?.description !== lastWeather) {
+					lastWeather = weather?.description || '';
+					bot.telegram.sendMessage(groupID,
+						`${emojis[weather?.icon || 'default']} ${lastWeather}`
+					);
+				}
 			})
 			.catch(function (error) {
 				console.error(error);
@@ -59,7 +77,7 @@ export async function start(): Promise<void> {
 	});
 
 	bot.on('new_chat_title', removeChatTitleEventMessage);
-	
+
 	await bot.launch();
 	console.log(new Date(), 'Bot started as', bot.botInfo?.username);
 }

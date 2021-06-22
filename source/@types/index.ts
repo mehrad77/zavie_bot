@@ -1,4 +1,4 @@
-
+import type { EmojisType } from "../constants";
 
 interface Coord {
     lon: number;
@@ -9,7 +9,7 @@ interface Weather {
     id: number;
     main: string;
     description: string;
-    icon: string;
+    icon: EmojisType;
 }
 
 interface Main {

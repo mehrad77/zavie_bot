@@ -45,7 +45,7 @@ bot.catch(error => {
 
 export async function start(): Promise<void> {
 	let lastWeather = '';
-	cron.schedule('* * * * *', () => {
+	cron.schedule('*/5 * * * *', () => {
 		axios.get(
 			'https://api.openweathermap.org/data/2.5/weather', {
 			params: {
@@ -59,6 +59,7 @@ export async function start(): Promise<void> {
 			.then((response: AxiosResponse<OpenWeatherMapResponseType>) => {
 				const main = response.data.main;
 				const weather = response.data.weather[0];
+				console.log({weather})
 				bot.telegram.setChatTitle(
 					groupID,
 					`${main.feels_like.toFixed(0)}°C ${emojis[weather?.icon || 'default']}`

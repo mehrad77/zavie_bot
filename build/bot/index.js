@@ -46,6 +46,7 @@ var telegraf_1 = require("telegraf");
 var telegraf_session_local_1 = __importDefault(require("telegraf-session-local"));
 var node_cron_1 = __importDefault(require("node-cron"));
 var axios_1 = __importDefault(require("axios"));
+var index_js_1 = require("../constants/index.js");
 var groupID = -1001352113717;
 var removeChatTitleEventMessage = function (ctx) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
@@ -78,14 +79,29 @@ bot.catch(function (error) {
 function start() {
     var _a;
     return __awaiter(this, void 0, void 0, function () {
+        var lastWeather;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    lastWeather = '';
                     node_cron_1.default.schedule('* * * * *', function () {
-                        axios_1.default.get('https://api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f')
+                        axios_1.default.get('https://api.openweathermap.org/data/2.5/weather', {
+                            params: {
+                                appid: "06662bd043969e4b502822dbc443125f",
+                                lat: "35.69963822421955",
+                                lon: "51.32022402010034",
+                                units: 'metric',
+                                lang: 'fa',
+                            }
+                        })
                             .then(function (response) {
                             var main = response.data.main;
-                            bot.telegram.setChatTitle(groupID, main.feels_like.toFixed(0) + "\u00B0C \u2618\uFE0F");
+                            var weather = response.data.weather[0];
+                            bot.telegram.setChatTitle(groupID, main.feels_like.toFixed(0) + "\u00B0C " + index_js_1.emojis[(weather === null || weather === void 0 ? void 0 : weather.icon) || 'default']);
+                            if ((weather === null || weather === void 0 ? void 0 : weather.description) !== lastWeather) {
+                                lastWeather = (weather === null || weather === void 0 ? void 0 : weather.description) || '';
+                                bot.telegram.sendMessage(groupID, index_js_1.emojis[(weather === null || weather === void 0 ? void 0 : weather.icon) || 'default'] + " " + lastWeather);
+                            }
                         })
                             .catch(function (error) {
                             console.error(error);

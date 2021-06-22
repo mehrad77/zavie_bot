@@ -1,12 +1,10 @@
 import { generateUpdateMiddleware } from 'telegraf-middleware-console-time';
 import { I18n as TelegrafI18n } from '@edjopato/telegraf-i18n';
-import { MenuMiddleware } from 'telegraf-inline-menu';
 import { Telegraf } from 'telegraf';
 import TelegrafSessionLocal from 'telegraf-session-local';
 import cron from "node-cron";
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { MyContext } from './my-context.js';
-import { menu } from './menu/index.js';
 
 const token = process.env['BOT_TOKEN'];
 if (!token) {
@@ -35,36 +33,18 @@ if (process.env['NODE_ENV'] !== 'production') {
 	bot.use(generateUpdateMiddleware());
 }
 
-const menuMiddleware = new MenuMiddleware('/', menu);
-bot.command(
-	'start',
-	async context => menuMiddleware.replyToContext(context)
-);
-
-bot.use(menuMiddleware.middleware());
-
 bot.catch(error => {
 	console.error('telegraf error occured', error);
 });
 
-var getInnovationFactoryWeather: AxiosRequestConfig = {
-	method: 'get',
-	url: 'api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f',
-	headers: {}
-};
-
 export async function start(): Promise<void> {
-	await bot.telegram.setMyCommands([
-		{ command: 'start', description: 'open the menu' }
-	]);
-
 	cron.schedule('* * * * *', () => {
-		axios(getInnovationFactoryWeather)
+		axios.get('https://api.openweathermap.org/data/2.5/weather?lat=35.69963822421955&lon=51.32022402010034&units=metric&appid=06662bd043969e4b502822dbc443125f')
 			.then(function (response) {
 				console.log(JSON.stringify(response.data.main));
 			})
 			.catch(function (error) {
-				console.log(error);
+				console.error(error);
 			});
 
 		// bot.telegram.sendMessage(1155817798, "scheduled message");
